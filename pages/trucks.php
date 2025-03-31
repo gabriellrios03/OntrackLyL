@@ -1,7 +1,7 @@
 <?php
 require '../Controllers/auth.php';
 
-$apiUrl = "https://manatee-mint-skunk.ngrok-free.app/api/Customer";
+$apiUrl = "https://manatee-mint-skunk.ngrok-free.app/api/Truck";
 
 $token = $_SESSION['token'];
 
@@ -22,10 +22,10 @@ $data = json_decode($response, true);
 
 // Verificar si la solicitud fue exitosa
 if (!$data || !$data['success']) {
-    die("Error al obtener los clientes.");
+    die("Error al obtener los camiones.");
 }
 
-$customers = $data['data'];
+$trucks = $data['data'];
 ?>
 
 <!DOCTYPE html>
@@ -36,23 +36,19 @@ $customers = $data['data'];
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
   <title>
-   LYL - Customers
+   LYL - Trucks
   </title>
-  <!--     Fonts and icons     -->
+  <!-- Fonts and icons -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
-  <!-- Nucleo Icons -->
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-  <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-  <!-- Material Icons -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
-  <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
   <script>
     function searchTable() {
         let input = document.getElementById("searchInput").value.toLowerCase();
-        let rows = document.querySelectorAll("#customerTable tbody tr");
+        let rows = document.querySelectorAll("#truckTable tbody tr");
         rows.forEach(row => {
             let text = row.textContent.toLowerCase();
             row.style.display = text.includes(input) ? "" : "none";
@@ -69,27 +65,30 @@ $customers = $data['data'];
             <div class="row">
                 <div class="col-12">
                     <div class="card my-4">
-                                    <div class="card-body">
-                        <h6>Catalogos De Clientes</h6>
-                            <input type="text" id="searchInput" class="form-control mb-3" placeholder="Buscar clientes..." onkeyup="searchTable()" style="margin-top: 10px;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-end">
+                                <a href="../Controllers/FormsN/Trucks.php" class="btn btn-success mb-3">Nuevo Camión</a>
+                            </div>
+                            <h6>Catálogo de Camiones</h6>
+                            <input type="text" id="searchInput" class="form-control mb-3" placeholder="Buscar camiones..." onkeyup="searchTable()" style="margin-top: 10px;">
                             <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
-                                <table class="table" id="customerTable">
+                                <table class="table" id="truckTable">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Name</th>
-                                            <th>RFC</th>
+                                            <th>Nombre</th>
+                                            <th>Placas</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($customers as $customer): ?>
+                                        <?php foreach ($trucks as $truck): ?>
                                             <tr>
-                                                <td><?php echo htmlspecialchars($customer['id']); ?></td>
-                                                <td><?php echo htmlspecialchars($customer['name']); ?></td>
-                                                <td><?php echo htmlspecialchars($customer['rfc']); ?></td>
+                                                <td><?php echo htmlspecialchars($truck['id']); ?></td>
+                                                <td><?php echo htmlspecialchars($truck['name']); ?></td>
+                                                <td><?php echo htmlspecialchars($truck['plate']); ?></td>
                                                 <td>
-                                                    <a href="edit_customer.php?id=<?php echo $customer['id']; ?>" class="btn btn-warning btn-sm">Editar</a>
+                                                    <a href="http://localhost:5500/Controllers/FormsE/edit_truck.php?id=<?php echo $truck['id']; ?>" class="btn btn-warning btn-sm">Editar</a>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
