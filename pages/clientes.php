@@ -1,7 +1,9 @@
 <?php
 require '../Controllers/auth.php';
+require '../Controllers/baseController.php';  // Incluir el archivo con la base URL
 
-$apiUrl = "https://manatee-mint-skunk.ngrok-free.app/api/Customer";
+// URLs de la API usando BASE_URL
+$apiUrl = BASE_URL . "/Customer";  // Aquí ya estamos usando la URL base
 
 $token = $_SESSION['token'];
 
