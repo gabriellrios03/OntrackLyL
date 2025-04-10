@@ -3,8 +3,8 @@ require '../Controllers/auth.php';
 require '../Controllers/baseController.php';
 // URLs de la API
 $baseAPI = BASE_URL;
-$apiUrlActive = BASE_URL . "/Delivery?status_id=10";
-$apiUrlCancelled = BASE_URL . "/Delivery?status_id=2";
+$apiUrlActive = BASE_URL . "/DeliveriesHDR?status_id=10";
+$apiUrlCancelled = BASE_URL . "/DeliveriesHDR?status_id=2";
 
 $token = $_SESSION['token'];
 
@@ -198,7 +198,7 @@ $cancelledDeliveries = getDeliveryData($apiUrlCancelled, $token);
                                                     <td><?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($delivery['appointment_date']))); ?></td>
                                                     <td><?php echo htmlspecialchars($delivery['status_description']); ?></td>
                                                     <td>
-                                                        <button class="btn btn-info btn-sm">Iniciar Viaje</button>
+                                                    <a href="../Controllers/FormsE/IniciarViaje.php?delivery_id=<?php echo $delivery['delivery_id']; ?>" class="btn btn-info btn-sm">Iniciar Viaje</a>
                                                         <button class="btn btn-danger btn-sm btn-cancel" onclick="confirmCancel(<?php echo $delivery['delivery_id']; ?>)">Cancelar</button>
                                                     </td>
                                                 </tr>

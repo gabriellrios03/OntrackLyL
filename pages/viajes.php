@@ -155,10 +155,11 @@ $completedDeliveries = getDeliveryData($apiUrlCompleted, $token);
                                                 <th>ID</th>
                                                 <th>Cliente</th>
                                                 <th>Camion</th>
-                                                <th>Placas</th>
+                                                <th>Remsión</th>
                                                 <th>Ruta</th>
                                                 <th>Fecha Inicio</th>
                                                 <th>Estado</th>
+                                                <th>Caja</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
@@ -168,16 +169,15 @@ $completedDeliveries = getDeliveryData($apiUrlCompleted, $token);
                                                     <td><?php echo htmlspecialchars($delivery['delivery_id']); ?></td>
                                                     <td><?php echo htmlspecialchars($delivery['customer_name']); ?></td>
                                                     <td><?php echo htmlspecialchars($delivery['truck_name']); ?></td>
-                                                    <td><?php echo htmlspecialchars($delivery['truck_plate']); ?></td>
+                                                    <td><?php echo htmlspecialchars($delivery['remision_number']); ?></td>
                                                     <td><?php echo htmlspecialchars($delivery['route_origin'] . ' a ' . $delivery['route_destination']); ?></td>
                                                     <td><?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($delivery['start_date'] ?? $delivery['appointment_date']))); ?></td>
+                                                    <td><?php echo htmlspecialchars($delivery['dryvan_name']); ?></td>
                                                     <td>
                                                         <span class="badge-status badge-in-progress">En Progreso</span>
                                                     </td>
                                                     <td>
-                                                        <button class="btn btn-success btn-sm btn-action" onclick="confirmComplete(<?php echo $delivery['delivery_id']; ?>)">
-                                                            Terminar Viaje
-                                                        </button>
+                                                    <a href="../Controllers/FormsE/FinalizarViaje.php?delivery_id=<?php echo $delivery['delivery_id']; ?>" class="btn btn-success btn-sm btn-action">Finalizar Viaje</a>
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>
@@ -195,10 +195,10 @@ $completedDeliveries = getDeliveryData($apiUrlCompleted, $token);
                                                 <th>ID</th>
                                                 <th>Cliente</th>
                                                 <th>Camion</th>
-                                                <th>Placas</th>
+                                                <th>Remisión</th>
                                                 <th>Ruta</th>
                                                 <th>Fecha Inicio</th>
-                                                <th>Fecha Fin</th>
+                                                <th>Caja</th>
                                                 <th>Estado</th>
                                                 <th>Acciones</th>
                                             </tr>
@@ -209,10 +209,10 @@ $completedDeliveries = getDeliveryData($apiUrlCompleted, $token);
                                                     <td><?php echo htmlspecialchars($delivery['delivery_id']); ?></td>
                                                     <td><?php echo htmlspecialchars($delivery['customer_name']); ?></td>
                                                     <td><?php echo htmlspecialchars($delivery['truck_name']); ?></td>
-                                                    <td><?php echo htmlspecialchars($delivery['truck_plate']); ?></td>
+                                                    <td><?php echo htmlspecialchars($delivery['remision_number']); ?></td>
                                                     <td><?php echo htmlspecialchars($delivery['route_origin'] . ' a ' . $delivery['route_destination']); ?></td>
                                                     <td><?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($delivery['start_date'] ?? $delivery['appointment_date']))); ?></td>
-                                                    <td><?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($delivery['end_date'] ?? ''))); ?></td>
+                                                    <td><?php echo htmlspecialchars($delivery['dryvan_name']); ?></td>
                                                     <td>
                                                         <span class="badge-status badge-completed">Terminado</span>
                                                     </td>
