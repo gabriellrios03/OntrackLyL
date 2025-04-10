@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['token'])) {
-    header("Location: ../index.php");
+    header("Location: ../Index.php");
     exit();
 }
 ?>
