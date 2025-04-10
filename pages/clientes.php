@@ -1,7 +1,9 @@
 <?php
 require '../Controllers/auth.php';
+require '../Controllers/baseController.php';  // Incluir el archivo con la base URL
 
-$apiUrl = "https://manatee-mint-skunk.ngrok-free.app/api/Customer";
+// URLs de la API usando BASE_URL
+$apiUrl = BASE_URL . "/Customer";  // Aquí ya estamos usando la URL base
 
 $token = $_SESSION['token'];
 
@@ -69,8 +71,11 @@ $customers = $data['data'];
             <div class="row">
                 <div class="col-12">
                     <div class="card my-4">
-                                    <div class="card-body">
-                        <h6>Catalogos De Clientes</h6>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-end">
+                                <a href="../Controllers/FormsN/Clientes.php" class="btn btn-success mb-3">Nuevo Cliente</a>
+                            </div>
+                            <h6>Catalogos De Clientes</h6>
                             <input type="text" id="searchInput" class="form-control mb-3" placeholder="Buscar clientes..." onkeyup="searchTable()" style="margin-top: 10px;">
                             <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
                                 <table class="table" id="customerTable">
@@ -89,7 +94,7 @@ $customers = $data['data'];
                                                 <td><?php echo htmlspecialchars($customer['name']); ?></td>
                                                 <td><?php echo htmlspecialchars($customer['rfc']); ?></td>
                                                 <td>
-                                                    <a href="edit_customer.php?id=<?php echo $customer['id']; ?>" class="btn btn-warning btn-sm">Editar</a>
+                                                    <a href="http://localhost:5500/Controllers/FormsE/edit_customer.php?id=<?php echo $customer['id']; ?>" class="btn btn-warning btn-sm">Editar</a>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
