@@ -158,8 +158,8 @@ $completedDeliveries = getDeliveryData($apiUrlCompleted, $token);
                                                 <th>Remsión</th>
                                                 <th>Ruta</th>
                                                 <th>Fecha Inicio</th>
-                                                <th>Estado</th>
                                                 <th>Caja</th>
+                                                <th>Estado</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>

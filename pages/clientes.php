@@ -94,7 +94,7 @@ $customers = $data['data'];
                                                 <td><?php echo htmlspecialchars($customer['name']); ?></td>
                                                 <td><?php echo htmlspecialchars($customer['rfc']); ?></td>
                                                 <td>
-                                                    <a href="http://localhost:5500/Controllers/FormsE/edit_customer.php?id=<?php echo $customer['id']; ?>" class="btn btn-warning btn-sm">Editar</a>
+                                                    <a href="http://qa.lylautotransportes.com.mx/Controllers/FormsE/edit_customer.php?id=<?php echo $customer['id']; ?>" class="btn btn-warning btn-sm">Editar</a>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
