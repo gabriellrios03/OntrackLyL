@@ -96,7 +96,7 @@ $dryvans = $data['data'];
                                                 <td><?php echo htmlspecialchars($dryvan['plate']); ?></td>
                                                 <td><?php echo htmlspecialchars($dryvan['last_location']); ?></td>
                                                 <td>
-                                                    <a href="http://localhost:5500/Controllers/FormsE/edit_dryvan.php?id=<?php echo $dryvan['id']; ?>" class="btn btn-warning btn-sm">Editar</a>
+                                                    <a href="https://qa.lylautotransportes.com.mx//Controllers/FormsE/edit_dryvan.php?id=<?php echo $dryvan['id']; ?>" class="btn btn-warning btn-sm">Editar</a>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
