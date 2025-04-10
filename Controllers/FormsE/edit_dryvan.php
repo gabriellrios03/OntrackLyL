@@ -141,7 +141,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                value="<?php echo htmlspecialchars($dryvan['last_location']); ?>">
                                     </div>
                                     <button type="submit" id="submitBtn" class="btn btn-primary">Actualizar Dryvan</button>
-                                    <a href="https://qa.lylautotransportes.com.mxpages/equipo.php" class="btn btn-secondary">Cancelar</a>
+                                    <a href="https://qa.lylautotransportes.com.mx/pages/equipo.php" class="btn btn-secondary">Cancelar</a>
                                 </form>
                             <?php endif; ?>
                         </div>
