@@ -99,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <?php endif; ?>
                             <?php if (!empty($success)): ?>
                                 <div class="alert alert-success"><?php echo $success; ?></div>
-                                <a href="http://localhost:5500/pages/clientes.php" class="btn btn-secondary">Regresar a Clientes</a>
+                                <a href="https://qa.lylautotransportes.com.mx/pages/clientes.php" class="btn btn-secondary">Regresar a Clientes</a>
                             <?php else: ?>
                                 <form method="POST">
                                     <div class="mb-3">

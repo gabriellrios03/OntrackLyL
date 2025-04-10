@@ -105,7 +105,7 @@ if (empty($data['free_dryvan_id'])) {
                             
                             <?php if (!empty($success)): ?>
                                 <div class="alert alert-success"><?php echo $success; ?></div>
-                                <a href="http://localhost:5500/pages/viajes.php" class="btn btn-secondary">Regresar a Viajes</a>
+                                <a href="https://qa.lylautotransportes.com.mx/pages/viajes.php" class="btn btn-secondary">Regresar a Viajes</a>
                             <?php else: ?>
                                 <form method="POST">
                                     <div class="mb-3">
@@ -141,7 +141,7 @@ if (empty($data['free_dryvan_id'])) {
                                     </div>
                                     
                                     <button type="submit" class="btn btn-success">Confirmar Finalización</button>
-                                    <a href="http://localhost:5500/pages/viajes.php" class="btn btn-secondary">Cancelar</a>
+                                    <a href="https://qa.lylautotransportes.com.mx/pages/viajes.php" class="btn btn-secondary">Cancelar</a>
                                 </form>
                             <?php endif; ?>
                         </div>

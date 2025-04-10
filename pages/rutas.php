@@ -104,7 +104,7 @@ $routes = $data['data'];
                                                 <td><?php echo htmlspecialchars($route['customer_price']); ?></td>
                                                 <td><?php echo htmlspecialchars($route['driver_profit']); ?></td>
                                                 <td>
-                                                    <a href="http://localhost:5500/Controllers/FormsE/edit_route.php?id=<?php echo $route['id']; ?>" class="btn btn-warning btn-sm">Editar</a>
+                                                    <a href="https://qa.lylautotransportes.com.mx//Controllers/FormsE/edit_route.php?id=<?php echo $route['id']; ?>" class="btn btn-warning btn-sm">Editar</a>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>

@@ -89,7 +89,7 @@ $trucks = $data['data'];
                                                 <td><?php echo htmlspecialchars($truck['name']); ?></td>
                                                 <td><?php echo htmlspecialchars($truck['plate']); ?></td>
                                                 <td>
-                                                    <a href="http://localhost:5500/Controllers/FormsE/edit_truck.php?id=<?php echo $truck['id']; ?>" class="btn btn-warning btn-sm">Editar</a>
+                                                    <a href="http://qa.lylautotransportes.com.mx/Controllers/FormsE/edit_truck.php?id=<?php echo $truck['id']; ?>" class="btn btn-warning btn-sm">Editar</a>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>

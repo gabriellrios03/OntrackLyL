@@ -141,7 +141,7 @@ try {
                             <?php endif; ?>
                             <?php if (!empty($success)): ?>
                                 <div class="alert alert-success"><?php echo $success; ?></div>
-                                <a href="http://localhost:5500/pages/pre-viajes.php" class="btn btn-secondary">Regresar a Pre Viajes</a>
+                                <a href="https://qa.lylautotransportes.com.mx/pages/pre-viajes.php" class="btn btn-secondary">Regresar a Pre Viajes</a>
                             <?php else: ?>
                                 <form method="POST" onsubmit="disableSubmitButton()">
                                     <div class="row">
@@ -188,7 +188,7 @@ try {
                                     </div>
                                     
                                     <button type="submit" id="submitBtn" class="btn btn-primary">Crear Pre Viaje</button>
-                                    <a href="http://localhost:5500/pages/pre-viajes.php" class="btn btn-secondary">Cancelar</a>
+                                    <a href="https://qa.lylautotransportes.com.mx/pages/pre-viajes.php" class="btn btn-secondary">Cancelar</a>
                                 </form>
                             <?php endif; ?>
                         </div>

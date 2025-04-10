@@ -67,7 +67,7 @@ $apiUrl = BASE_URL . "/User/login"; // Aquí ya estamos usando la URL base
   <?php session_start(); ?>
   <div class="login-container">
     <img src="../assets/img/logo_lyl.png" alt="LYL OnTrack Logo" class="logo">
-    <h3 class="font-weight-bold">Welcome Back</h3>
+    <h3 class="font-weight-bold">Ambiente de Pruebas</h3>
     <p class="text-muted">Sign in to continue</p>
     <form id="loginForm">
       <div class="mb-3 text-start">
