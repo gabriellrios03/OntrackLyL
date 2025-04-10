@@ -1,3 +1,9 @@
+<?php 
+require_once './Controllers/baseController.php'; // Incluir el archivo con la base URL
+$apiUrl = BASE_URL . "/User/login"; // Aquí ya estamos usando la URL base
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -95,7 +101,7 @@
       errorMessage.textContent = '';
       
       try {
-        const response = await fetch('https://5cff-2806-109f-16-4c8c-8a63-8558-4b41-d55f.ngrok-free.app/api/User/login', {
+        const response = await fetch('https://manually-massive-flamingo.ngrok-free.app/api/User/login', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',

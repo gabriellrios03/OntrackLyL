@@ -30,6 +30,38 @@ function getDeliveryData($url, $token) {
     return $data['data'];
 }
 
+// Función para cancelar un pre-viaje
+function cancelDelivery($deliveryId, $token) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, BASE_URL . "/DeliveriesHDR/Cancel/$deliveryId");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Authorization: Bearer $token",
+        "ngrok-skip-browser-warning: true",
+        "accept: */*"
+    ]);
+    
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    
+    return $httpCode == 200;
+}
+
+// Procesar cancelación si se envió el formulario
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancel_delivery'])) {
+    $deliveryId = $_POST['delivery_id'] ?? '';
+    if (!empty($deliveryId)) {
+        $success = cancelDelivery($deliveryId, $token);
+        if ($success) {
+            // Recargar la página para ver los cambios
+            header("Location: ".$_SERVER['PHP_SELF']);
+            exit();
+        }
+    }
+}
+
 // Obtener datos
 $activeDeliveries = getDeliveryData($apiUrlActive, $token);
 $cancelledDeliveries = getDeliveryData($apiUrlCancelled, $token);
@@ -68,6 +100,9 @@ $cancelledDeliveries = getDeliveryData($apiUrlCancelled, $token);
       color: #495057;
       border-color: #dee2e6 #dee2e6 #fff;
     }
+    .btn-cancel {
+      margin-left: 5px;
+    }
   </style>
   <script>
     function openTab(evt, tabName) {
@@ -95,6 +130,13 @@ $cancelledDeliveries = getDeliveryData($apiUrlCancelled, $token);
         row.style.display = text.includes(input) ? "" : "none";
       });
     }
+
+    function confirmCancel(deliveryId) {
+      if (confirm('¿Estás seguro que deseas cancelar este pre-viaje?')) {
+        document.getElementById('delivery_id').value = deliveryId;
+        document.getElementById('cancelForm').submit();
+      }
+    }
   </script>
 </head>
 <body class="bg-gray-100">
@@ -107,7 +149,16 @@ $cancelledDeliveries = getDeliveryData($apiUrlCancelled, $token);
                 <div class="col-12">
                     <div class="card my-4">
                         <div class="card-body">
-                            <h6>Pre Viajes</h6>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6>Pre Viajes</h6>
+                                <a href="../Controllers/FormsN/PreViaje.php" class="btn btn-success mb-3">Nuevo Pre Viaje</a>
+                            </div>
+                            
+                            <!-- Formulario oculto para cancelación -->
+                            <form id="cancelForm" method="POST" style="display: none;">
+                                <input type="hidden" name="cancel_delivery" value="1">
+                                <input type="hidden" id="delivery_id" name="delivery_id" value="">
+                            </form>
                             
                             <!-- Pestañas -->
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -147,7 +198,8 @@ $cancelledDeliveries = getDeliveryData($apiUrlCancelled, $token);
                                                     <td><?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($delivery['appointment_date']))); ?></td>
                                                     <td><?php echo htmlspecialchars($delivery['status_description']); ?></td>
                                                     <td>
-                                                        <button class="btn btn-info btn-sm">Procesar Viaje</button>
+                                                        <button class="btn btn-info btn-sm">Iniciar Viaje</button>
+                                                        <button class="btn btn-danger btn-sm btn-cancel" onclick="confirmCancel(<?php echo $delivery['delivery_id']; ?>)">Cancelar</button>
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>
