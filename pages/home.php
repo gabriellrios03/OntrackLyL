@@ -34,8 +34,8 @@ require '../Controllers/auth.php';
       <div class="row">
         <div class="ms-3">
           <hr>
-          <h3 class="mb-0 h4 font-weight-bolder">Quick Access</h3>
-          <p class="mb-4">Access your most used sections quickly.</p>
+          <h3 class="mb-0 h4 font-weight-bolder">Accesos Directos</h3>
+          <p class="mb-4">LYL ONTRACK. QA - ENV  Version 1.0.0</p>
         </div>
         
         <!-- Quick Access Cards -->
