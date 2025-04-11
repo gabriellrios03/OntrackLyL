@@ -6,7 +6,7 @@ if (!isset($_SESSION['token'])) {
     exit();
 }
 
-// Validar token con la API
+// Validar token con la API para mantener la sesion activa o pedir re ingreso
 $token = $_SESSION['token'];
 $ch = curl_init();
 
