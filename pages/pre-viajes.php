@@ -30,17 +30,22 @@ function getDeliveryData($url, $token) {
     return $data['data'];
 }
 
-// Función para cancelar un pre-viaje
-function cancelDelivery($deliveryId, $token) {
+// Función para cancelar un pre-viaje (actualizada para enviar comentarios)
+function cancelDelivery($deliveryId, $comments, $token) {
+    $url = BASE_URL . "/DeliveriesHDR/Cancel/$deliveryId";
+    $data = json_encode(['cancellationComments' => $comments]);
+    
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, BASE_URL . "/DeliveriesHDR/Cancel/$deliveryId");
+    curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         "Authorization: Bearer $token",
         "ngrok-skip-browser-warning: true",
-        "accept: */*"
+        "accept: */*",
+        "Content-Type: application/json"
     ]);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -52,8 +57,10 @@ function cancelDelivery($deliveryId, $token) {
 // Procesar cancelación si se envió el formulario
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancel_delivery'])) {
     $deliveryId = $_POST['delivery_id'] ?? '';
+    $comments = $_POST['cancellation_comments'] ?? 'Sin comentarios';
+    
     if (!empty($deliveryId)) {
-        $success = cancelDelivery($deliveryId, $token);
+        $success = cancelDelivery($deliveryId, $comments, $token);
         if ($success) {
             // Recargar la página para ver los cambios
             header("Location: ".$_SERVER['PHP_SELF']);
@@ -103,6 +110,13 @@ $cancelledDeliveries = getDeliveryData($apiUrlCancelled, $token);
     .btn-cancel {
       margin-left: 5px;
     }
+    /* Estilos para el modal de cancelación */
+    .modal-cancel-reasons .form-check {
+      margin-bottom: 10px;
+    }
+    .modal-cancel-reasons textarea {
+      margin-top: 15px;
+    }
   </style>
   <script>
     function openTab(evt, tabName) {
@@ -131,12 +145,77 @@ $cancelledDeliveries = getDeliveryData($apiUrlCancelled, $token);
       });
     }
 
-    function confirmCancel(deliveryId) {
-      if (confirm('¿Estás seguro que deseas cancelar este pre-viaje?')) {
-        document.getElementById('delivery_id').value = deliveryId;
+    // Variable global para almacenar el ID del viaje a cancelar
+    let currentDeliveryIdToCancel = null;
+
+    // Función para abrir el modal de cancelación
+    function openCancelModal(deliveryId) {
+      currentDeliveryIdToCancel = deliveryId;
+      // Resetear el formulario
+      document.getElementById('cancelForm').reset();
+      // Mostrar el modal
+      var modal = new bootstrap.Modal(document.getElementById('cancelModal'));
+      modal.show();
+    }
+
+    // Función para enviar el formulario de cancelación (CORREGIDA)
+    function submitCancelForm() {
+      if (currentDeliveryIdToCancel) {
+        // Obtener los comentarios del textarea
+        const comments = document.getElementById('custom_comments').value;
+        
+        // Validar que haya comentarios si se seleccionó "Otra razón"
+        const otherSelected = document.getElementById('reason_other').checked;
+        if (otherSelected && comments.trim() === '') {
+          alert('Por favor especifica el motivo de cancelación');
+          return;
+        }
+        
+        // Actualizar los campos ocultos
+        document.getElementById('delivery_id').value = currentDeliveryIdToCancel;
+        document.getElementById('cancellation_comments').value = comments;
+        
+        // Enviar el formulario
         document.getElementById('cancelForm').submit();
       }
     }
+
+    // Función para actualizar los comentarios basados en la selección
+    function updateCancelComments() {
+      const selectedReason = document.querySelector('input[name="cancellation_reason"]:checked');
+      const customComments = document.getElementById('custom_comments');
+      
+      if (selectedReason) {
+        if (selectedReason.value === 'other') {
+          // Si seleccionó "Otra razón", habilitar el textarea
+          customComments.disabled = false;
+          customComments.required = true;
+          customComments.value = ''; // Limpiar el valor
+          document.getElementById('comments_label').style.display = 'block';
+        } else {
+          // Usar el valor del motivo seleccionado
+          customComments.value = selectedReason.dataset.comment;
+          customComments.disabled = true;
+          customComments.required = false;
+          document.getElementById('comments_label').style.display = 'none';
+        }
+      }
+    }
+
+    // Inicialización cuando el DOM está listo
+    document.addEventListener('DOMContentLoaded', function() {
+      // Seleccionar automáticamente la primera opción al abrir el modal
+      document.getElementById('cancelModal').addEventListener('show.bs.modal', function() {
+        document.getElementById('reason_client').checked = true;
+        updateCancelComments();
+      });
+      
+      // Validar el formulario antes de enviar (por si acaso)
+      document.getElementById('cancelForm').addEventListener('submit', function(e) {
+        const comments = document.getElementById('custom_comments').value;
+        document.getElementById('cancellation_comments').value = comments;
+      });
+    });
   </script>
 </head>
 <body class="bg-gray-100">
@@ -154,11 +233,71 @@ $cancelledDeliveries = getDeliveryData($apiUrlCancelled, $token);
                                 <a href="../Controllers/FormsN/PreViaje.php" class="btn btn-success mb-3">Nuevo Pre Viaje</a>
                             </div>
                             
-                            <!-- Formulario oculto para cancelación -->
-                            <form id="cancelForm" method="POST" style="display: none;">
+                            <!-- Formulario para cancelación -->
+                            <form id="cancelForm" method="POST">
                                 <input type="hidden" name="cancel_delivery" value="1">
                                 <input type="hidden" id="delivery_id" name="delivery_id" value="">
+                                <input type="hidden" id="cancellation_comments" name="cancellation_comments" value="">
                             </form>
+                            
+                            <!-- Modal de cancelación -->
+                            <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="cancelModalLabel">Confirmar cancelación</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body modal-cancel-reasons">
+                                    <p>Por favor selecciona el motivo de la cancelación:</p>
+                                    
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="cancellation_reason" id="reason_client" value="client" data-comment="Cancelado por solicitud del cliente" onchange="updateCancelComments()">
+                                      <label class="form-check-label" for="reason_client">
+                                        Solicitud del cliente
+                                      </label>
+                                    </div>
+                                    
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="cancellation_reason" id="reason_trip_change" value="trip_change" data-comment="Cancelado para cambiar a otro viaje" onchange="updateCancelComments()">
+                                      <label class="form-check-label" for="reason_trip_change">
+                                        Se cambiará a otro viaje
+                                      </label>
+                                    </div>
+                                    
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="cancellation_reason" id="reason_duplicate" value="duplicate" data-comment="Cancelado por estar duplicado" onchange="updateCancelComments()">
+                                      <label class="form-check-label" for="reason_duplicate">
+                                        Viaje duplicado
+                                      </label>
+                                    </div>
+                                    
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="cancellation_reason" id="reason_error" value="error" data-comment="Cancelado por error en el registro" onchange="updateCancelComments()">
+                                      <label class="form-check-label" for="reason_error">
+                                        Error en el registro
+                                      </label>
+                                    </div>
+                                    
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="cancellation_reason" id="reason_other" value="other" onchange="updateCancelComments()">
+                                      <label class="form-check-label" for="reason_other">
+                                        Otra razón
+                                      </label>
+                                    </div>
+                                    
+                                    <div id="comments_label" style="display: none;">
+                                      <label for="custom_comments" class="form-label">Por favor especifica:</label>
+                                    </div>
+                                    <textarea class="form-control" id="custom_comments" rows="3" disabled></textarea>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-danger" onclick="submitCancelForm()">Confirmar cancelación</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                             
                             <!-- Pestañas -->
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -198,8 +337,8 @@ $cancelledDeliveries = getDeliveryData($apiUrlCancelled, $token);
                                                     <td><?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($delivery['appointment_date']))); ?></td>
                                                     <td><?php echo htmlspecialchars($delivery['status_description']); ?></td>
                                                     <td>
-                                                    <a href="../Controllers/FormsE/IniciarViaje.php?delivery_id=<?php echo $delivery['delivery_id']; ?>" class="btn btn-info btn-sm">Iniciar Viaje</a>
-                                                        <button class="btn btn-danger btn-sm btn-cancel" onclick="confirmCancel(<?php echo $delivery['delivery_id']; ?>)">Cancelar</button>
+                                                        <a href="../Controllers/FormsE/IniciarViaje.php?delivery_id=<?php echo $delivery['delivery_id']; ?>" class="btn btn-info btn-sm">Iniciar Viaje</a>
+                                                        <button class="btn btn-danger btn-sm btn-cancel" onclick="openCancelModal(<?php echo $delivery['delivery_id']; ?>)">Cancelar</button>
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>
@@ -221,6 +360,7 @@ $cancelledDeliveries = getDeliveryData($apiUrlCancelled, $token);
                                                 <th>Ruta</th>
                                                 <th>Fecha Cita</th>
                                                 <th>Estado</th>
+                                                <th>Motivo</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -233,6 +373,7 @@ $cancelledDeliveries = getDeliveryData($apiUrlCancelled, $token);
                                                     <td><?php echo htmlspecialchars($delivery['route_origin'] . ' a ' . $delivery['route_destination']); ?></td>
                                                     <td><?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($delivery['appointment_date']))); ?></td>
                                                     <td><?php echo htmlspecialchars($delivery['status_description']); ?></td>
+                                                    <td><?php echo htmlspecialchars($delivery['cancellation_comments'] ?? 'No especificado'); ?></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         </tbody>
@@ -245,5 +386,18 @@ $cancelledDeliveries = getDeliveryData($apiUrlCancelled, $token);
             </div>
         </div>
     </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Asegurarse de que el modal funciona con Bootstrap
+        document.addEventListener('DOMContentLoaded', function() {
+            // Actualizar el campo de comentarios oculto antes de enviar el formulario
+            document.getElementById('cancelForm').addEventListener('submit', function(e) {
+                const customComments = document.getElementById('custom_comments');
+                document.getElementById('cancellation_comments').value = customComments.value;
+            });
+        });
+    </script>
 </body>
 </html>
