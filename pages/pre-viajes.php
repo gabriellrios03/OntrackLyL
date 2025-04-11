@@ -373,7 +373,7 @@ $cancelledDeliveries = getDeliveryData($apiUrlCancelled, $token);
                                                     <td><?php echo htmlspecialchars($delivery['route_origin'] . ' a ' . $delivery['route_destination']); ?></td>
                                                     <td><?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($delivery['appointment_date']))); ?></td>
                                                     <td><?php echo htmlspecialchars($delivery['status_description']); ?></td>
-                                                    <td><?php echo htmlspecialchars($delivery['cancellation_comments'] ?? 'No especificado'); ?></td>
+                                                    <td><?php echo htmlspecialchars($delivery['Comments'] ?? 'No especificado'); ?></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         </tbody>
