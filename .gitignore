@@ -1,0 +1,49 @@
+# Laravel core
+/vendor
+/node_modules
+/public/storage
+/storage/*.key
+.env
+.env.backup
+.env.local
+.env.*.php
+.phpunit.result.cache
+
+# Laravel specific
+/storage/app/public
+/storage/framework/cache/data
+/storage/framework/sessions
+/storage/framework/testing
+/storage/framework/views
+/storage/logs
+
+# IDEs and editors
+.idea
+.vscode
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Composer
+composer.lock
+
+# NPM/Yarn
+yarn.lock
+npm-debug.log
+pnpm-lock.yaml
+
+# Laravel Telescope (if used)
+telescope/requests.bak
+
+# Laravel Horizon (if used)
+horizon/*.json
+
+# Optional: Docker
+docker-compose.override.yml
+docker-compose.dev.yml
+
+# Optional: PHPUnit coverage
+coverage/

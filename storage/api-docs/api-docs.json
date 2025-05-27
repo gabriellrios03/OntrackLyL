@@ -1,0 +1,252 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "API de Transportes",
+      "version": "1.0.0",
+      "description": "API para gestión de transporte"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:8081/api",
+        "description": "Servidor Local de Desarrollo"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Cajas",
+        "description": "Operaciones con cajas de transporte"
+      }
+    ],
+    "paths": {
+      "/api/cajas": {
+        "get": {
+          "tags": ["Cajas"],
+          "summary": "Listar todas las cajas activas",
+          "responses": {
+            "200": {
+              "description": "Lista de cajas activas",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Caja"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": ["Cajas"],
+          "summary": "Crear una nueva caja",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CajaInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Caja creada",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Caja"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Datos no válidos"
+            }
+          }
+        }
+      },
+      "/api/cajas/{id}": {
+        "get": {
+          "tags": ["Cajas"],
+          "summary": "Obtener una caja específica",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Datos de caja",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Caja"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Caja no encontrada"
+            }
+          }
+        }
+      },
+      "/api/cajas/actualizar/{id}": {
+        "post": {
+          "tags": ["Cajas"],
+          "summary": "Actualizar una caja",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CajaInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Caja actualizada",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Caja"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Caja no encontrada"
+            },
+            "422": {
+              "description": "Datos no válidos"
+            }
+          }
+        }
+      },
+      "/api/cajas/eliminar/{id}": {
+        "post": {
+          "tags": ["Cajas"],
+          "summary": "Desactivar una caja (borrado lógico)",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Caja desactivada"
+            },
+            "404": {
+              "description": "Caja no encontrada"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Caja": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "noeconomico": {
+              "type": "string",
+              "example": "ABC123"
+            },
+            "placas": {
+              "type": "string",
+              "example": "XYZ789"
+            },
+            "inspeccionmecanica": {
+              "type": "string",
+              "format": "date",
+              "example": "2025-01-15"
+            },
+            "ultimaubicacion": {
+              "type": "string",
+              "example": "Ciudad de México"
+            },
+            "usuario": {
+              "type": "string",
+              "example": "admin"
+            },
+            "fechamodifica": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "activo": {
+              "type": "integer",
+              "enum": [0, 1],
+              "example": 1
+            }
+          }
+        },
+        "CajaInput": {
+          "type": "object",
+          "required": [
+            "noeconomico",
+            "placas",
+            "inspeccionmecanica",
+            "ultimaubicacion",
+            "usuario"
+          ],
+          "properties": {
+            "noeconomico": {
+              "type": "string",
+              "example": "ABC123"
+            },
+            "placas": {
+              "type": "string",
+              "example": "XYZ789"
+            },
+            "inspeccionmecanica": {
+              "type": "string",
+              "format": "date",
+              "example": "2025-01-15"
+            },
+            "ultimaubicacion": {
+              "type": "string",
+              "example": "Ciudad de México"
+            },
+            "usuario": {
+              "type": "string",
+              "example": "admin"
+            },
+            "activo": {
+              "type": "integer",
+              "enum": [0, 1],
+              "example": 1
+            }
+          }
+        }
+      }
+    }
+  }
